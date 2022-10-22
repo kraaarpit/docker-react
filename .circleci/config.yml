@@ -5,7 +5,7 @@ version: 2.1
     - image: cimg/base:2022.06
 
 .directory: &directory
-  working_directory: ~/app
+  working_directory: ~/workspace
 
 jobs:
   checkout-code:
@@ -16,24 +16,10 @@ jobs:
       - persist_to_workspace:
         root: ~/
         paths:
-          - app
-
-  build-image:
-    <<: *container_executor
-    <<: *directory
-    steps:
-      - setup_remote_docker:
-        version: 20.10.14
-      - attach_workspace:
-        at: ~/
-      - run: 
-         name: docker_build
-         command: |
-           docker build -t kraaarpit/docker-react -f Dockerfile.dev .
+          - workspace
 
 
 workflows:
   build_and_test:
     jobs:
       - checkout-code
-      - build-image
