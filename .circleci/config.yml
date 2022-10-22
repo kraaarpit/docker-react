@@ -38,3 +38,5 @@ workflows:
     jobs:
       - checkout-code
       - build-image
+        required:
+          checkout-code
