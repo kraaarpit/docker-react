@@ -48,6 +48,6 @@ workflows:
   build_and_test:
     jobs:
       - build-image
-      - test
-        requires:
-          - build-image
+      - test:
+          requires:
+            - build-image
