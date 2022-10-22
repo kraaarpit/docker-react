@@ -16,33 +16,33 @@ jobs:
       - persist_to_workspace:
         root: ~/
         paths:
-          -app
+          - app
 
-  build-image:
-    <<: *container_executor
-    <<: *directory
-    steps:
-      - setup_remote_docker:
-        version: 20.10.14
-      - attach_workspace:
-        at: ~/
-      - run: 
-         name: docker_build
-         command: |
-           docker build -t kraaarpit/docker-react -f Dockerfile.dev .
+  # build-image:
+  #   <<: *container_executor
+  #   <<: *directory
+  #   steps:
+  #     - setup_remote_docker:
+  #       version: 20.10.14
+  #     - attach_workspace:
+  #       at: ~/
+  #     - run: 
+  #        name: docker_build
+  #        command: |
+  #          docker build -t kraaarpit/docker-react -f Dockerfile.dev .
 
-  test:
-    <<: *container_executor
-    <<: *directory
-    steps:
-      - setup_remote_docker:
-        version: 20.10.14
-      - attach_workspace:
-           at: ~/
-      - run: 
-         name: docker_test
-         command: |
-            docker run -e CI=true kraaarpit/docker-react npm run test
+  # test:
+  #   <<: *container_executor
+  #   <<: *directory
+  #   steps:
+  #     - setup_remote_docker:
+  #       version: 20.10.14
+  #     - attach_workspace:
+  #          at: ~/
+  #     - run: 
+  #        name: docker_test
+  #        command: |
+  #           docker run -e CI=true kraaarpit/docker-react npm run test
 
 workflows:
   build_and_test:
