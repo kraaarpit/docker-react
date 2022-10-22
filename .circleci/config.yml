@@ -12,8 +12,8 @@ jobs:
     <<: *container_executor
     <<: *directory
     steps:
-      -checkout
-      -persist_to_workspace:
+      - checkout
+      - persist_to_workspace:
         root: ~/
         paths:
           -workspace
