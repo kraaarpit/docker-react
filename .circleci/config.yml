@@ -13,8 +13,27 @@ jobs:
     <<: *directory
     steps:
       - checkout
+      - persist_to_workspace:
+        root: ~/
+        paths:
+          - app
+
+  build-image:
+    <<: *container_executor
+    <<: *directory
+    steps:
+      - setup_remote_docker:
+        version: 20.10.14
+      - attach_workspace:
+        at: ~/
+      - run: 
+         name: docker_build
+         command: |
+           docker build -t kraaarpit/docker-react -f Dockerfile.dev .
+
 
 workflows:
   build_and_test:
     jobs:
       - checkout-code
+      - build-image
