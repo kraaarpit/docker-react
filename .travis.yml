@@ -1,0 +1,10 @@
+language: generic
+sudo: required # reqwired for docker install
+services:   
+  - docker   # we require docker at min
+
+before_install:
+  - docker build -t kraaarpit/docker-react -f Dockerfile.dev .   # tagging it so we can use it later to run image
+
+script:
+  - docker run -e CI=true kraaarpit/docker-react npm run test
