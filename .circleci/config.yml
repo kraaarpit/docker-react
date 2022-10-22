@@ -1,0 +1,25 @@
+version: 2.1
+
+jobs:
+  build:
+    working_directory: ~/app
+    docker:
+      - image: "docker:17.05.0-ce-git"
+    steps:
+      - checkout
+      - run: docker build -t kraaarpit/docker-react -f Dockerfile.dev .
+  test:
+    working_directory: ~/app
+    docker:
+      - image: "docker:17.05.0-ce-git"
+    steps:
+      - checkout
+      - run:  docker run -e CI=true kraaarpit/docker-react npm run test
+
+workflows:
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
