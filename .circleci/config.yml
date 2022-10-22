@@ -13,10 +13,10 @@ jobs:
     <<: *container_executor
     steps:
       - checkout
-      - persist_to_workspace:
-        root: ~/
-        paths:
-          - app
+      # - persist_to_workspace:
+      #   root: ~/
+      #   paths:
+      #     - app
 
   # build-image:
   #   <<: *container_executor
