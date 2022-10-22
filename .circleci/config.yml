@@ -37,6 +37,6 @@ workflows:
   build_and_test:
     jobs:
       - checkout-code
-      - build-image
-        requires:
-          checkout-code
+      - build-image:
+          requires:
+           - checkout-code
