@@ -2,53 +2,121 @@ version: 2.1
 
 .container_executor: &container_executor
   docker:
-    iamge: cimg/base:2022.06
+    - image: cimg/base:2022.06
 
 .directory: &directory
-  working_directory: ~/app
+  working_directory: ~/workspace
 
 jobs:
   checkout-code:
-    <<: *directory
     <<: *container_executor
+    <<: *directory
     steps:
       - checkout
-      # - persist_to_workspace:
-      #   root: ~/
-      #   paths:
-      #     - app
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - workspace
 
-  # build-image:
-  #   <<: *container_executor
-  #   <<: *directory
-  #   steps:
-  #     - setup_remote_docker:
-  #       version: 20.10.14
-  #     - attach_workspace:
-  #       at: ~/
-  #     - run: 
-  #        name: docker_build
-  #        command: |
-  #          docker build -t kraaarpit/docker-react -f Dockerfile.dev .
+  build-image:
+    <<: *container_executor
+    <<: *directory
+    steps:
+      - setup_remote_docker:
+         version: 20.10.14
+      - attach_workspace:
+          at: ~/
+      - run: 
+         name: docker_build
+         command: |
+           docker build -t kraaarpit/docker-react -f Dockerfile.dev .
+           mkdir -p ~/workspace/docker-cache
+           docker save -o ~/workspace/docker-cache/built-image.tar kraaarpit/docker-react
 
-  # test:
-  #   <<: *container_executor
-  #   <<: *directory
-  #   steps:
-  #     - setup_remote_docker:
-  #       version: 20.10.14
-  #     - attach_workspace:
-  #          at: ~/
-  #     - run: 
-  #        name: docker_test
-  #        command: |
-  #           docker run -e CI=true kraaarpit/docker-react npm run test
+  test:
+    <<: *container_executor
+    <<: *directory
+    steps:
+      - setup_remote_docker:
+         version: 20.10.14
+      - attach_workspace:
+           at: ~/
+      - run: 
+         name: docker_test
+         command: |
+            docker load < ./docker-cache/built-image.tar
+            docker run -e CI=true kraaarpit/docker-react npm run test
+
+
 
 workflows:
   build_and_test:
     jobs:
       - checkout-code
-      # - build-image
-      # - test:
-      #     requires:
-      #       - build-image
+      - build-image:
+          requires:
+           - checkout-code
+      - test:
+          requires:
+            - build-image
+version: 2.1
+
+.container_executor: &container_executor
+  docker:
+    - image: cimg/base:2022.06
+
+.directory: &directory
+  working_directory: ~/workspace
+
+jobs:
+  checkout-code:
+    <<: *container_executor
+    <<: *directory
+    steps:
+      - checkout
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - workspace
+
+  build-image:
+    <<: *container_executor
+    <<: *directory
+    steps:
+      - setup_remote_docker:
+         version: 20.10.14
+      - attach_workspace:
+          at: ~/
+      - run: 
+         name: docker_build
+         command: |
+           docker build -t kraaarpit/docker-react -f Dockerfile.dev .
+           mkdir -p ~/workspace/docker-cache
+           docker save -o ~/workspace/docker-cache/built-image.tar kraaarpit/docker-react
+
+  test:
+    <<: *container_executor
+    <<: *directory
+    steps:
+      - setup_remote_docker:
+         version: 20.10.14
+      - attach_workspace:
+           at: ~/
+      - run: 
+         name: docker_test
+         command: |
+            docker load < ./docker-cache/built-image.tar
+            docker run -e CI=true kraaarpit/docker-react npm run test
+
+
+
+workflows:
+  build_and_test:
+    jobs:
+      - checkout-code
+      - build-image:
+          requires:
+           - checkout-code
+      - test:
+          requires:
+            - build-image
