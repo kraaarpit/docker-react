@@ -9,8 +9,8 @@ version: 2.1
 
 jobs:
   checkout-code:
-    <<: *container_executor
     <<: *directory
+    <<: *container_executor
     steps:
       - checkout
       - persist_to_workspace:
@@ -38,7 +38,7 @@ jobs:
       - setup_remote_docker:
         version: 20.10.14
       - attach_workspace:
-        at: ~/
+           at: ~/
       - run: 
          name: docker_test
          command: |
@@ -48,7 +48,7 @@ workflows:
   build_and_test:
     jobs:
       - checkout-code
-      - build-image
-      - test:
-          requires:
-            - build-image
+      # - build-image
+      # - test:
+      #     requires:
+      #       - build-image
