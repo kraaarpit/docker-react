@@ -25,7 +25,7 @@ jobs:
       - setup_remote_docker:
          version: 20.10.14
       - attach_workspace:
-          at: ~/workspace
+          at: ~/
       - run: 
           name: docker_build
           command: |
@@ -45,7 +45,7 @@ jobs:
       - setup_remote_docker:
          version: 20.10.14
       - attach_workspace:
-          at: ~/workspace
+          at: ~/
       - run: 
          name: docker_test
          command: |
