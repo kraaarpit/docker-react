@@ -27,10 +27,15 @@ jobs:
       - attach_workspace:
           at: ~/
       - run: 
-         name: docker_build
-         command: |
-           docker build -t kraaarpit/docker-react -f Dockerfile.dev .
-           docker run -e CI=true kraaarpit/docker-react npm run test
+          name: docker_build
+          command: |
+            docker build -t kraaarpit/docker-react -f Dockerfile.dev .
+            mkdir -p ~/workspace/docker-cache
+            docker save -o ~/workspace/docker-cache/built-image.tar kraaarpit/docker-react
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - workspace
            
 
   test:
@@ -40,11 +45,12 @@ jobs:
       - setup_remote_docker:
          version: 20.10.14
       - attach_workspace:
-           at: ~/
+           at: ~
       - run: 
          name: docker_test
          command: |
-            docker load < ./docker-cache/built-image.tar
+            ls
+            docker load -i ~/workspace/docker-cache/built-image.tar
             docker run -e CI=true kraaarpit/docker-react npm run test
 
 
@@ -56,4 +62,7 @@ workflows:
       - build-image:
           requires:
            - checkout-code
+      - test:
+          requires:
+            - build-image
       
