@@ -2,7 +2,7 @@ version: 2.1
 
 .container_executor: &container_executor
   docker:
-    image: cimg/base:2022.06
+    - image: cimg/base:2022.06
 
 .directory: &directory
   working_directory: ~/app
