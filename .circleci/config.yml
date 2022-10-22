@@ -47,6 +47,7 @@ jobs:
 workflows:
   build_and_test:
     jobs:
+      - checkout-code
       - build-image
       - test:
           requires:
