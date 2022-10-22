@@ -9,7 +9,9 @@ jobs:
       - checkout
       - setup_remote_docker:
           version: 20.10.14
-      - run: docker build -t kraaarpit/docker-react -f Dockerfile.dev .
+      - run: |
+         docker build -t kraaarpit/docker-react -f Dockerfile.dev .
+         docker run -e CI=true kraaarpit/docker-react npm run test
   test:
     working_directory: ~/app
     docker:
@@ -24,6 +26,3 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - test:
-          requires:
-            - build
