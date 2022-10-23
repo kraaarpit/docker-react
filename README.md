@@ -3,7 +3,11 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 
-This is for poc for Docker, Travis CI and AWS beanstalk
+This is for poc for Docker, Circle CI and AWS beanstalk
+
+
+
+
 
 
 In the project directory, you can run:
