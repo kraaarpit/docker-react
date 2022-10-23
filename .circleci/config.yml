@@ -52,6 +52,19 @@ jobs:
             ls
             docker load -i ~/workspace/docker-cache/built-image.tar
             docker run -e CI=true kraaarpit/docker-react npm run test
+  
+  deploy:
+    <<: *container_executor
+    <<: *directory
+    steps:
+      - setup_remote_docker:
+         version: 20.10.14
+      - attach_workspace:
+          at: ~/
+      - run: 
+         name: Deploying
+         command: |
+            eb deploy Dockerreact-env
 
 
 
@@ -65,4 +78,7 @@ workflows:
       - test:
           requires:
             - build-image
+      - deploy:
+          requires:
+            - test
       

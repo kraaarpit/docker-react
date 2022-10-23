@@ -1,0 +1,9 @@
+branch-defaults:
+  master:
+    environment: Dockerreact-env
+global:
+  application_name: docker-react
+  default_ec2_keyname: EC2 poc
+  default_platform: Docker running on 64bit Amazon Linux 2
+  default_region: ap-south-1
+  sc: git
